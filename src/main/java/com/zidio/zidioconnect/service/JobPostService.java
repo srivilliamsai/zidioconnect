@@ -7,6 +7,6 @@ public interface JobPostService {
     JobPostDTO createJobPost(JobPostDTO jobPostDTO);
     JobPostDTO getJobPostById(Long id);
     List<JobPostDTO> getAllJobPosts();
+    JobPostDTO updateJobPost(Long id, JobPostDTO jobPostDTO);
     void deleteJobPost(Long id);
-    JobPostDTO updateJobPost(Long id, JobPostDTO updatedPost);
 }

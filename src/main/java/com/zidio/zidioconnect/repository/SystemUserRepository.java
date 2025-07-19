@@ -1,18 +1,13 @@
 package com.zidio.zidioconnect.repository;
 
-import java.util.List;
-
+import com.zidio.zidioconnect.entity.SystemUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.zidio.zidioconnect.entity.SystemUser;
-import com.zidio.zidioconnect.enums.Role;
+import java.util.Optional;
 
 @Repository
 public interface SystemUserRepository extends JpaRepository<SystemUser, Long> {
-
-    SystemUser findByEmail(String email);
-
-    List<SystemUser> findByRole(Role role);  
-    
+    Optional<SystemUser> findByEmail(String email);
+    boolean existsByEmail(String email);
 }

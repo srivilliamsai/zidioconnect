@@ -1,28 +1,41 @@
 package com.zidio.zidioconnect.controller;
 
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import com.zidio.zidioconnect.dto.UserPaymentStatusDTO;
 import com.zidio.zidioconnect.service.UserPaymentStatusService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/user-subscription-status")
+@RequestMapping("/api/payments")
 public class UserPaymentStatusController {
 
     @Autowired
-    private UserPaymentStatusService userPaymentStatusService;
+    private UserPaymentStatusService service;
 
     @PostMapping
-    public ResponseEntity<UserPaymentStatusDTO> assign(@RequestBody UserPaymentStatusDTO dto) {
-        return ResponseEntity.ok(userPaymentStatusService.assignSubscriptionPlan(dto));
+    public UserPaymentStatusDTO create(@RequestBody UserPaymentStatusDTO dto) {
+        return service.create(dto);
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<Optional<UserPaymentStatusDTO>> getStatus(@PathVariable Long userId) {
-        return ResponseEntity.ok(userPaymentStatusService.getStatusByUserId(userId));
+    @GetMapping
+    public List<UserPaymentStatusDTO> getAll() {
+        return service.getAll();
+    }
+
+    @GetMapping("/{id}")
+    public UserPaymentStatusDTO getById(@PathVariable Long id) {
+        return service.getById(id);
+    }
+
+    @PutMapping("/{id}")
+    public UserPaymentStatusDTO update(@PathVariable Long id, @RequestBody UserPaymentStatusDTO dto) {
+        return service.update(id, dto);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        service.delete(id);
     }
 }

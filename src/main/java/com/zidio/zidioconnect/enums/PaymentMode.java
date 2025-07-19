@@ -1,10 +1,9 @@
-// PaymentType.java
 package com.zidio.zidioconnect.enums;
 
-public enum PaymentType {
+public enum PaymentMode {
+    UPI,
+    NET_BANKING,
     CREDIT_CARD,
     DEBIT_CARD,
-    NET_BANKING,
-    UPI,
     WALLET
 }

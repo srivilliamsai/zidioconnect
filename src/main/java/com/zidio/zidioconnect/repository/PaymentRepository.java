@@ -1,13 +1,11 @@
 package com.zidio.zidioconnect.repository;
 
+import com.zidio.zidioconnect.entity.Payment;
+import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-import com.zidio.zidioconnect.entity.Payment;
-
-@Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
-	
     List<Payment> findByUserId(Long userId);
+    List<Payment> findByPlanId(Long planId);
+    List<Payment> findByPaymentStatus(String status);
 }

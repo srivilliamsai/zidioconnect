@@ -1,12 +1,11 @@
 package com.zidio.zidioconnect.entity;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
-import javax.persistence.*;
-
 import com.zidio.zidioconnect.enums.PaymentStatus;
 import com.zidio.zidioconnect.enums.PaymentType;
+
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "payments")
@@ -31,24 +30,21 @@ public class Payment {
     private LocalDateTime paymentDate;
 
     // Constructors
-    public Payment() {
-    }
+    public Payment() {}
 
-    public Payment(Long id, Long userId, Long planId, BigDecimal amount, String currency,
-                   PaymentStatus paymentStatus, String transactionId,
-                   PaymentType paymentType, LocalDateTime paymentDate) {
+    public Payment(Long id, Long userId, Long planId, String transactionId, BigDecimal amount, String currency,
+                   PaymentStatus paymentStatus, PaymentType paymentType, LocalDateTime paymentDate) {
         this.id = id;
         this.userId = userId;
         this.planId = planId;
+        this.transactionId = transactionId;
         this.amount = amount;
         this.currency = currency;
         this.paymentStatus = paymentStatus;
-        this.transactionId = transactionId;
         this.paymentType = paymentType;
         this.paymentDate = paymentDate;
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }

@@ -2,6 +2,7 @@ package com.zidio.zidioconnect.service.impl;
 
 import com.zidio.zidioconnect.dto.JobPostDTO;
 import com.zidio.zidioconnect.entity.JobPost;
+import com.zidio.zidioconnect.enums.JobStatus;
 import com.zidio.zidioconnect.repository.JobPostRepository;
 import com.zidio.zidioconnect.service.JobPostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,28 +17,70 @@ public class JobPostServiceImpl implements JobPostService {
     @Autowired
     private JobPostRepository jobPostRepository;
 
-    private JobPostDTO convertToDTO(JobPost jobPost) {
-        JobPostDTO dto = new JobPostDTO();
-        dto.setId(jobPost.getId());
-        dto.setJobTitle(jobPost.getJobTitle());
-        dto.setJobDescription(jobPost.getJobDescription());
-        dto.setJobLocation(jobPost.getJobLocation());
-        dto.setJobType(jobPost.getJobType());
-        dto.setCompanyName(jobPost.getCompanyName());
-        dto.setPostedByEmail(jobPost.getPostedByEmail());
-        dto.setPostedDate(jobPost.getPostedDate());
-        dto.setMinSalary(jobPost.getMinSalary());
-        dto.setMaxSalary(jobPost.getMaxSalary());
-        dto.setMinExperience(jobPost.getMinExperience());
-        dto.setMaxExperience(jobPost.getMaxExperience());
-        dto.setJobStatus(jobPost.getJobStatus());
-        dto.setLastDateToApply(jobPost.getLastDateToApply());
-        return dto;
+    private JobPost dtoToEntity(JobPostDTO dto) {
+        return new JobPost(
+                dto.getId(),
+                dto.getJobTitle(),
+                dto.getJobDescription(),
+                dto.getJobLocation(),
+                dto.getJobType(),
+                dto.getCompanyName(),
+                dto.getPostedByEmail(),
+                dto.getPostedDate(),
+                dto.getMinSalary(),
+                dto.getMaxSalary(),
+                dto.getMinExperience(),
+                dto.getMaxExperience(),
+                dto.getJobStatus(),
+                dto.getLastDateToApply()
+        );
     }
 
-    private JobPost convertToEntity(JobPostDTO dto) {
-        JobPost jobPost = new JobPost();
-        jobPost.setId(dto.getId());
+    private JobPostDTO entityToDto(JobPost entity) {
+        return new JobPostDTO(
+                entity.getId(),
+                entity.getJobTitle(),
+                entity.getJobDescription(),
+                entity.getJobLocation(),
+                entity.getJobType(),
+                entity.getCompanyName(),
+                entity.getPostedByEmail(),
+                entity.getPostedDate(),
+                entity.getMinSalary(),
+                entity.getMaxSalary(),
+                entity.getMinExperience(),
+                entity.getMaxExperience(),
+                entity.getJobStatus(),
+                entity.getLastDateToApply()
+        );
+    }
+
+    @Override
+    public JobPostDTO createJobPost(JobPostDTO jobPostDTO) {
+        JobPost jobPost = dtoToEntity(jobPostDTO);
+        jobPost.setJobStatus(JobStatus.ACTIVE);
+        return entityToDto(jobPostRepository.save(jobPost));
+    }
+
+    @Override
+    public JobPostDTO getJobPostById(Long id) {
+        JobPost jobPost = jobPostRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Job not found with id: " + id));
+        return entityToDto(jobPost);
+    }
+
+    @Override
+    public List<JobPostDTO> getAllJobPosts() {
+        return jobPostRepository.findAll().stream()
+                .map(this::entityToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public JobPostDTO updateJobPost(Long id, JobPostDTO dto) {
+        JobPost jobPost = jobPostRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Job not found with id: " + id));
+
         jobPost.setJobTitle(dto.getJobTitle());
         jobPost.setJobDescription(dto.getJobDescription());
         jobPost.setJobLocation(dto.getJobLocation());
@@ -51,40 +94,12 @@ public class JobPostServiceImpl implements JobPostService {
         jobPost.setMaxExperience(dto.getMaxExperience());
         jobPost.setJobStatus(dto.getJobStatus());
         jobPost.setLastDateToApply(dto.getLastDateToApply());
-        return jobPost;
-    }
 
-    @Override
-    public JobPostDTO createJobPost(JobPostDTO dto) {
-        return convertToDTO(jobPostRepository.save(convertToEntity(dto)));
-    }
-
-    @Override
-    public JobPostDTO getJobPostById(Long id) {
-        return jobPostRepository.findById(id)
-            .map(this::convertToDTO)
-            .orElseThrow(() -> new RuntimeException("JobPost not found with id: " + id));
-    }
-
-    @Override
-    public List<JobPostDTO> getAllJobPosts() {
-        return jobPostRepository.findAll()
-                .stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+        return entityToDto(jobPostRepository.save(jobPost));
     }
 
     @Override
     public void deleteJobPost(Long id) {
         jobPostRepository.deleteById(id);
-    }
-
-    @Override
-    public JobPostDTO updateJobPost(Long id, JobPostDTO updatedPost) {
-        JobPost existing = jobPostRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("JobPost not found"));
-        JobPost updatedEntity = convertToEntity(updatedPost);
-        updatedEntity.setId(existing.getId()); // Preserve original ID
-        return convertToDTO(jobPostRepository.save(updatedEntity));
     }
 }

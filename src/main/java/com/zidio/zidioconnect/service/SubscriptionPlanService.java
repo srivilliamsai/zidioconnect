@@ -1,51 +1,17 @@
 package com.zidio.zidioconnect.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.zidio.zidioconnect.dto.SubscriptionPlanDTO;
-import com.zidio.zidioconnect.entity.SubscriptionPlan;
-import com.zidio.zidioconnect.repository.SubscriptionPlanRepository;
+import java.util.List;
 
-@Service
-public class SubscriptionPlanService {
+public interface SubscriptionPlanService {
 
-    @Autowired
-    private SubscriptionPlanRepository subscriptionPlanRepository;
+    SubscriptionPlanDTO createPlan(SubscriptionPlanDTO dto);
 
-    public List<SubscriptionPlanDTO> getAllSubscriptionPlan() {
-        return subscriptionPlanRepository.findAll()
-                .stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
+    SubscriptionPlanDTO updatePlan(Long id, SubscriptionPlanDTO dto);
 
-    public SubscriptionPlanDTO createSubscription(SubscriptionPlanDTO dto) {
-        SubscriptionPlan subscription = convertToEntity(dto);
-        SubscriptionPlan saved = subscriptionPlanRepository.save(subscription);
-        return convertToDTO(saved);
-    }
+    SubscriptionPlanDTO getPlanById(Long id);
 
-    private SubscriptionPlanDTO convertToDTO(SubscriptionPlan sub) {
-        SubscriptionPlanDTO dto = new SubscriptionPlanDTO();
-        dto.setId(sub.getId());
-        dto.setName(sub.getName());
-        dto.setPrice(sub.getPrice());
-        dto.setDescription(sub.getDescription());
-        dto.setDurationInDays(sub.getDurationInDays());
-        return dto;
-    }
+    List<SubscriptionPlanDTO> getAllPlans();
 
-    private SubscriptionPlan convertToEntity(SubscriptionPlanDTO dto) {
-        SubscriptionPlan sub = new SubscriptionPlan();
-        sub.setId(dto.getId());
-        sub.setName(dto.getName());
-        sub.setPrice(dto.getPrice());
-        sub.setDescription(dto.getDescription());
-        sub.setDurationInDays(dto.getDurationInDays());
-        return sub;
-    }
+    void deletePlan(Long id);
 }
