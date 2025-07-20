@@ -22,13 +22,14 @@ public class SecurityConfig {
     // Security filter chain configuration
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable() // Disable CSRF for APIs
+        http
+            .csrf().disable() // Disable CSRF for REST APIs
             .authorizeRequests()
-            .antMatchers("/api/auth/**").permitAll() // Allow public access to authentication endpoints
-            .anyRequest().authenticated() // All other requests require authentication
+                .antMatchers("/api/auth/**").permitAll() // Public endpoints (like login, register)
+                .anyRequest().authenticated() // All others require authentication
             .and()
             .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS); // No session will be created
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS); // No sessions, stateless API
 
         return http.build();
     }
