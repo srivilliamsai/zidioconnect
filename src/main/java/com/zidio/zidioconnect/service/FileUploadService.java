@@ -15,22 +15,11 @@ public class FileUploadService {
     @Autowired
     private Cloudinary cloudinary;
 
-    public String uploadFile(MultipartFile file) {
-        if (file == null || file.isEmpty()) {
-            throw new IllegalArgumentException("Uploaded file is empty or null.");
-        }
+    public String uploadFile(MultipartFile file) throws IOException {
+        @SuppressWarnings("unchecked") // Suppresses the warning for raw Map cast
+        Map<String, Object> uploadResult = (Map<String, Object>) cloudinary.uploader()
+                .upload(file.getBytes(), ObjectUtils.emptyMap());
 
-        try {
-            @SuppressWarnings("unchecked")
-            Map<String, Object> uploadResult = cloudinary.uploader().upload(
-                file.getBytes(),
-                ObjectUtils.asMap("resource_type", "auto")
-            );
-
-            return uploadResult.get("secure_url").toString();
-
-        } catch (IOException e) {
-            throw new RuntimeException("File upload failed: " + e.getMessage(), e);
-        }
+        return uploadResult.get("secure_url").toString(); // Return uploaded file URL
     }
 }
