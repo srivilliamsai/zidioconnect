@@ -1,6 +1,7 @@
 package com.zidio.zidioconnect.service.impl;
 
 import com.zidio.zidioconnect.dto.AnalyticsResponse;
+import com.zidio.zidioconnect.dto.PaymentAnalyticsDTO;
 import com.zidio.zidioconnect.enums.JobStatus;
 import com.zidio.zidioconnect.enums.PaidStatus;
 import com.zidio.zidioconnect.repository.JobPostRepository;
@@ -27,12 +28,18 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         long closedJobs = jobPostRepository.countByJobStatus(JobStatus.CLOSED);
 
         long totalPayments = userPaymentStatusRepository.count();
-        long paidCount = userPaymentStatusRepository.countByPaidStatus(PaidStatus.PAID);
-        long unpaidCount = userPaymentStatusRepository.countByPaidStatus(PaidStatus.UNPAID);
+        long paidCount = userPaymentStatusRepository.countByStatus(PaidStatus.PAID);    // Correct method call
+        long unpaidCount = userPaymentStatusRepository.countByStatus(PaidStatus.UNPAID);// Correct method call
 
         return new AnalyticsResponse(
                 totalJobs, activeJobs, inactiveJobs, filledJobs, closedJobs,
                 totalPayments, paidCount, unpaidCount
         );
     }
+
+	@Override
+	public PaymentAnalyticsDTO getPaymentAnalytics() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
