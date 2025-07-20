@@ -10,33 +10,44 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/payments")
+@CrossOrigin(origins = "*") // Optional: Enable CORS for frontend access
 public class PaymentController {
 
     @Autowired
     private PaymentService paymentService;
 
+    // Create a new payment
     @PostMapping
     public ResponseEntity<PaymentDTO> createPayment(@RequestBody PaymentDTO dto) {
-        return ResponseEntity.ok(paymentService.createPayment(dto));
+        PaymentDTO created = paymentService.createPayment(dto); // Create payment
+        return ResponseEntity.ok(created); // Return response
     }
 
+    // Get a payment by its ID
     @GetMapping("/{id}")
     public ResponseEntity<PaymentDTO> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(paymentService.getPaymentById(id));
+        PaymentDTO dto = paymentService.getPaymentById(id); // Fetch payment by ID
+        return ResponseEntity.ok(dto);
     }
 
+    // Get all payments for a specific user
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<PaymentDTO>> getByUserId(@PathVariable Long userId) {
-        return ResponseEntity.ok(paymentService.getPaymentsByUserId(userId));
+        List<PaymentDTO> userPayments = paymentService.getPaymentsByUserId(userId); // List for user
+        return ResponseEntity.ok(userPayments);
     }
 
+    // Get all payments (admin or overview purpose)
     @GetMapping
     public ResponseEntity<List<PaymentDTO>> getAll() {
-        return ResponseEntity.ok(paymentService.getAllPayments());
+        List<PaymentDTO> allPayments = paymentService.getAllPayments(); // All payments
+        return ResponseEntity.ok(allPayments);
     }
 
+    // Update the status of a payment (e.g., from PENDING to SUCCESS)
     @PutMapping("/{id}/status")
     public ResponseEntity<PaymentDTO> updateStatus(@PathVariable Long id, @RequestParam String status) {
-        return ResponseEntity.ok(paymentService.updatePaymentStatus(id, status));
+        PaymentDTO updated = paymentService.updatePaymentStatus(id, status); // Update status
+        return ResponseEntity.ok(updated);
     }
 }

@@ -11,7 +11,7 @@ public class CloudinaryConfig {
     @Bean
     public Cloudinary cloudinary() {
         return new Cloudinary(ObjectUtils.asMap(
-            "cloud_name", "your_cloud_name",     // 🔁 Replace with real values
+            "cloud_name", "your_cloud_name",     //  Replace with real values
             "api_key", "your_api_key",
             "api_secret", "your_api_secret",
             "secure", true
