@@ -42,13 +42,19 @@ public class AdminUser {
 
     private LocalDateTime updatedAt;
 
+    //  ADDED: OneToOne relationship with SystemUser
+    @OneToOne
+    @JoinColumn(name = "system_user_id") // Foreign key column in adminUsers table
+    private SystemUser systemUser;
+
     // Default constructor
     public AdminUser() {}
 
     // Constructor with all fields
     public AdminUser(Long id, String name, String email, String username, String password, Role role,
                      String contactNumber, String profileImageUrl, boolean active, boolean blocked,
-                     boolean deleted, LocalDateTime createdAt, LocalDateTime updatedAt) {
+                     boolean deleted, LocalDateTime createdAt, LocalDateTime updatedAt,
+                     SystemUser systemUser) { // ADDED: systemUser in constructor
         this.id = id;
         this.name = name;
         this.email = email;
@@ -62,6 +68,7 @@ public class AdminUser {
         this.deleted = deleted;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.systemUser = systemUser; // ADDED
     }
 
     @PrePersist
@@ -113,4 +120,13 @@ public class AdminUser {
 
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+
+    // ADDED: Getter and Setter for systemUser
+    public SystemUser getSystemUser() {
+        return systemUser;
+    }
+
+    public void setSystemUser(SystemUser systemUser) {
+        this.systemUser = systemUser;
+    }
 }

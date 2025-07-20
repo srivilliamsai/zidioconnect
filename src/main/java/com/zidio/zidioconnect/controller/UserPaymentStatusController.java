@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/payments")
+@RequestMapping("/api/user-payment-status") // Changed to avoid conflict with /api/payments
 public class UserPaymentStatusController {
 
     @Autowired

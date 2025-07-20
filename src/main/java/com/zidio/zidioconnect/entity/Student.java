@@ -18,6 +18,12 @@ public class Student {
     private String address;
     private String linkedInProfile;
 
+    // ====== Added for OneToOne mapping with SystemUser ======
+    @OneToOne
+    @JoinColumn(name = "system_user_id") // This creates the FK in student table
+    private SystemUser systemUser;
+    // ==========================================================
+
     public Student() {}
 
     public Student(Long id, String name, String email, String phone, String qualification,
@@ -32,7 +38,8 @@ public class Student {
         this.linkedInProfile = linkedInProfile;
     }
 
-    // Getters & Setters
+    // ===== Getters & Setters =====
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -56,4 +63,13 @@ public class Student {
 
     public String getLinkedInProfile() { return linkedInProfile; }
     public void setLinkedInProfile(String linkedInProfile) { this.linkedInProfile = linkedInProfile; }
+
+    // ===== Added Getter/Setter for systemUser =====
+    public SystemUser getSystemUser() {
+        return systemUser;
+    }
+
+    public void setSystemUser(SystemUser systemUser) {
+        this.systemUser = systemUser;
+    }
 }

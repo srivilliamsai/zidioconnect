@@ -1,5 +1,6 @@
 package com.zidio.zidioconnect.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zidio.zidioconnect.enums.Role;
 
 import javax.persistence.*;
@@ -18,32 +19,33 @@ public class SystemUser {
     @Column(unique = true, nullable = false)
     private String email;
 
+    @JsonIgnore
+    @Column(nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private Role role; // ADMIN, STUDENT, RECRUITER
+    private Role role; // ADMIN, STUDENT
 
-    private boolean isActive;
+    private boolean isActive = true;
 
     private LocalDateTime createdAt;
-
     private LocalDateTime updatedAt;
 
-    // Optional: Bi-directional mapping (if needed)
+    // =========== RELATIONSHIPS ===========
+
+    // Add OneToOne with Student
     @OneToOne(mappedBy = "systemUser", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Student student;
 
+    // Add OneToOne with AdminUser
     @OneToOne(mappedBy = "systemUser", cascade = CascadeType.ALL)
-    private Recruiter recruiter;
-
-    @OneToOne(mappedBy = "systemUser", cascade = CascadeType.ALL)
+    @JsonIgnore
     private AdminUser adminUser;
 
-    public SystemUser() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-        this.isActive = true;
-    }
+    // =========== CONSTRUCTORS ===========
+
+    public SystemUser() {}
 
     public SystemUser(Long id, String name, String email, String password, Role role, boolean isActive) {
         this.id = id;
@@ -52,11 +54,9 @@ public class SystemUser {
         this.password = password;
         this.role = role;
         this.isActive = isActive;
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
     }
 
-    // Getters and Setters
+    // =========== GETTERS & SETTERS ===========
 
     public Long getId() {
         return id;
@@ -130,19 +130,24 @@ public class SystemUser {
         this.student = student;
     }
 
-    public Recruiter getRecruiter() {
-        return recruiter;
-    }
-
-    public void setRecruiter(Recruiter recruiter) {
-        this.recruiter = recruiter;
-    }
-
     public AdminUser getAdminUser() {
         return adminUser;
     }
 
     public void setAdminUser(AdminUser adminUser) {
         this.adminUser = adminUser;
+    }
+
+    // =========== JPA Hooks ===========
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
     }
 }
