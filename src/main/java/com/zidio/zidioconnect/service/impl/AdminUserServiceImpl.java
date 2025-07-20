@@ -17,14 +17,15 @@ public class AdminUserServiceImpl implements AdminUserService {
     private AdminUserRepository adminRepo;
 
     private AdminUserDTO convertToDTO(AdminUser user) {
-        AdminUserDTO dto = new AdminUserDTO();
-        dto.setId(user.getId());
-        dto.setName(user.getName());
-        dto.setEmail(user.getEmail());
-        dto.setRole(user.getRole());
-        dto.setActive(user.isActive());
-        dto.setBlocked(user.isBlocked());
-        return dto;
+        return new AdminUserDTO(
+            user.getId(),
+            user.getName(),
+            user.getEmail(),
+            user.getUsername(),
+            user.getRole(),
+            user.isActive(),
+            user.isBlocked()
+        );
     }
 
     private AdminUser convertToEntity(AdminUserDTO dto) {
@@ -32,6 +33,7 @@ public class AdminUserServiceImpl implements AdminUserService {
         user.setId(dto.getId());
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
+        user.setUsername(dto.getUsername());
         user.setRole(dto.getRole());
         user.setActive(dto.isActive());
         user.setBlocked(dto.isBlocked());
@@ -46,7 +48,8 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Override
     public List<AdminUserDTO> getAllAdmins() {
-        return adminRepo.findAll().stream()
+        return adminRepo.findAll()
+                .stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
@@ -64,6 +67,7 @@ public class AdminUserServiceImpl implements AdminUserService {
                 .orElseThrow(() -> new RuntimeException("Admin not found with id " + id));
         existing.setName(dto.getName());
         existing.setEmail(dto.getEmail());
+        existing.setUsername(dto.getUsername());
         existing.setRole(dto.getRole());
         existing.setActive(dto.isActive());
         existing.setBlocked(dto.isBlocked());

@@ -51,11 +51,23 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- JWT -->
+        <!-- ✅ JJWT - Java JWT (v0.11.5) -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
-            <version>0.9.1</version>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.11.5</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson if using Gson -->
+            <version>0.11.5</version>
+            <scope>runtime</scope>
         </dependency>
 
         <!-- Mail -->
@@ -131,7 +143,7 @@
 
     <build>
         <plugins>
-            <!-- Spring Boot Plugin with main class -->
+            <!-- Spring Boot Plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

@@ -5,11 +5,12 @@ import com.zidio.zidioconnect.entity.JobPost;
 import com.zidio.zidioconnect.enums.JobStatus;
 import com.zidio.zidioconnect.repository.JobPostRepository;
 import com.zidio.zidioconnect.service.JobPostService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class JobPostServiceImpl implements JobPostService {

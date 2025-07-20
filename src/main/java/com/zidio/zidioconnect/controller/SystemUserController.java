@@ -1,42 +1,58 @@
 package com.zidio.zidioconnect.controller;
 
 import com.zidio.zidioconnect.dto.SystemUserDTO;
-import com.zidio.zidioconnect.entity.SystemUser;
+import com.zidio.zidioconnect.enums.Role;
 import com.zidio.zidioconnect.service.SystemUserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/system-users")
 public class SystemUserController {
 
     @Autowired
-    private SystemUserService systemUserService;
+    private SystemUserService service;
 
     @PostMapping("/create")
-    public ResponseEntity<SystemUserDTO> createUser(@RequestBody SystemUserDTO dto,
-                                                    @RequestParam String password) {
-        return ResponseEntity.ok(systemUserService.createSystemUser(dto, password));
+    public SystemUserDTO createUser(@RequestBody SystemUserDTO dto) {
+        return service.createUser(dto);
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<SystemUserDTO>> getAllUsers() {
-        return ResponseEntity.ok(systemUserService.getAllSystemUsers());
+    @PostMapping("/register")
+    public SystemUserDTO register(@RequestBody SystemUserDTO dto, @RequestParam String password) {
+        return service.createSystemUser(dto, password);
     }
 
-    @GetMapping("/email")
-    public ResponseEntity<SystemUser> getByEmail(@RequestParam String email) {
-        Optional<SystemUser> user = systemUserService.getByEmail(email);
-        return user.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    @GetMapping
+    public List<SystemUserDTO> getAll() {
+        return service.getAllUsers();
+    }
+
+    @GetMapping("/{id}")
+    public SystemUserDTO getById(@PathVariable Long id) {
+        return service.getUserById(id);
+    }
+
+    @PutMapping("/{id}")
+    public SystemUserDTO update(@PathVariable Long id, @RequestBody SystemUserDTO dto) {
+        return service.updateUser(id, dto);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        service.deleteUser(id);
+    }
+
+    @GetMapping("/role/{role}")
+    public List<SystemUserDTO> getByRole(@PathVariable Role role) {
+        return service.getUsersByRole(role);
     }
 
     @PutMapping("/deactivate/{id}")
-    public ResponseEntity<String> deactivateUser(@PathVariable Long id) {
-        systemUserService.deactivateUser(id);
-        return ResponseEntity.ok("User deactivated successfully");
+    public void deactivate(@PathVariable Long id) {
+        service.deactivateUser(id);
     }
 }

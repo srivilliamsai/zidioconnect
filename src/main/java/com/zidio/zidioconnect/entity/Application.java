@@ -1,10 +1,9 @@
 package com.zidio.zidioconnect.entity;
 
-import java.util.Date;
+import com.zidio.zidioconnect.enums.Status;
 
 import javax.persistence.*;
-
-import com.zidio.zidioconnect.enums.Status;
+import java.util.Date;
 
 @Entity
 @Table(name = "applications")
@@ -15,7 +14,12 @@ public class Application {
     private Long id;
 
     private Long studentId;
-    private Long jobId;
+
+    //  Updated: Map relationship to JobPost
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "job_id", referencedColumnName = "id")
+    private JobPost jobPost;
+
     private String resumeURL;
 
     @Enumerated(EnumType.STRING)
@@ -24,22 +28,25 @@ public class Application {
     @Temporal(TemporalType.TIMESTAMP)
     private Date appliedDate;
 
-    // NEW FIELDS
-    private String feedback;                 // Admin/recruiter feedback
-    private boolean shortlisted = false;     // For shortlist marking
-    private boolean interviewScheduled = false; // Status of interview
+    private String feedback;
+
+    private boolean shortlisted = false;
+    private boolean interviewScheduled = false;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
+    //  Default constructor
     public Application() {
     }
-    
-    public Application(Long id, Long studentId, Long jobId, String resumeURL, Status status, Date appliedDate,
-                       String feedback, boolean shortlisted, boolean interviewScheduled, Date updatedAt) {
+
+    //  All-args constructor
+    public Application(Long id, Long studentId, JobPost jobPost, String resumeURL, Status status,
+                       Date appliedDate, String feedback, boolean shortlisted, boolean interviewScheduled,
+                       Date updatedAt) {
         this.id = id;
         this.studentId = studentId;
-        this.jobId = jobId;
+        this.jobPost = jobPost;
         this.resumeURL = resumeURL;
         this.status = status;
         this.appliedDate = appliedDate;
@@ -49,83 +56,34 @@ public class Application {
         this.updatedAt = updatedAt;
     }
 
-    public Long getId() {
-        return id;
-    }
+    // ✅ Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Long getStudentId() { return studentId; }
+    public void setStudentId(Long studentId) { this.studentId = studentId; }
 
-    public Long getStudentId() {
-        return studentId;
-    }
+    public JobPost getJobPost() { return jobPost; }
+    public void setJobPost(JobPost jobPost) { this.jobPost = jobPost; }
 
-    public void setStudentId(Long studentId) {
-        this.studentId = studentId;
-    }
+    public String getResumeURL() { return resumeURL; }
+    public void setResumeURL(String resumeURL) { this.resumeURL = resumeURL; }
 
-    public Long getJobId() {
-        return jobId;
-    }
+    public Status getStatus() { return status; }
+    public void setStatus(Status status) { this.status = status; }
 
-    public void setJobId(Long jobId) {
-        this.jobId = jobId;
-    }
+    public Date getAppliedDate() { return appliedDate; }
+    public void setAppliedDate(Date appliedDate) { this.appliedDate = appliedDate; }
 
-    public String getResumeURL() {
-        return resumeURL;
-    }
+    public String getFeedback() { return feedback; }
+    public void setFeedback(String feedback) { this.feedback = feedback; }
 
-    public void setResumeURL(String resumeURL) {
-        this.resumeURL = resumeURL;
-    }
+    public boolean isShortlisted() { return shortlisted; }
+    public void setShortlisted(boolean shortlisted) { this.shortlisted = shortlisted; }
 
-    public Status getStatus() {
-        return status;
-    }
+    public boolean isInterviewScheduled() { return interviewScheduled; }
+    public void setInterviewScheduled(boolean interviewScheduled) { this.interviewScheduled = interviewScheduled; }
 
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public Date getAppliedDate() {
-        return appliedDate;
-    }
-
-    public void setAppliedDate(Date appliedDate) {
-        this.appliedDate = appliedDate;
-    }
-
-    public String getFeedback() {
-        return feedback;
-    }
-
-    public void setFeedback(String feedback) {
-        this.feedback = feedback;
-    }
-
-    public boolean isShortlisted() {
-        return shortlisted;
-    }
-
-    public void setShortlisted(boolean shortlisted) {
-        this.shortlisted = shortlisted;
-    }
-
-    public boolean isInterviewScheduled() {
-        return interviewScheduled;
-    }
-
-    public void setInterviewScheduled(boolean interviewScheduled) {
-        this.interviewScheduled = interviewScheduled;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+    public Date getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(Date updatedAt) { this.updatedAt = updatedAt; }
 }

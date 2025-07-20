@@ -1,13 +1,15 @@
 package com.zidio.zidioconnect.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.zidio.zidioconnect.enums.Role;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.zidio.zidioconnect.enums.Role;
-
 @Entity
-@Table(name = "adminUsers")
+@Table(name = "admin_users")
 public class AdminUser {
 
     @Id
@@ -30,31 +32,31 @@ public class AdminUser {
     private Role role;
 
     private String contactNumber;
-
     private String profileImageUrl;
 
     private boolean active = true;
     private boolean blocked = false;
     private boolean deleted = false;
 
+    @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    //  ADDED: OneToOne relationship with SystemUser
+    // ADDED: OneToOne Mapping
     @OneToOne
-    @JoinColumn(name = "system_user_id") // Foreign key column in adminUsers table
+    @JoinColumn(name = "system_user_id")
     private SystemUser systemUser;
 
-    // Default constructor
+    // Constructors
     public AdminUser() {}
 
-    // Constructor with all fields
     public AdminUser(Long id, String name, String email, String username, String password, Role role,
                      String contactNumber, String profileImageUrl, boolean active, boolean blocked,
                      boolean deleted, LocalDateTime createdAt, LocalDateTime updatedAt,
-                     SystemUser systemUser) { // ADDED: systemUser in constructor
+                     SystemUser systemUser) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -68,17 +70,7 @@ public class AdminUser {
         this.deleted = deleted;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.systemUser = systemUser; // ADDED
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
+        this.systemUser = systemUser;
     }
 
     // Getters and Setters
@@ -121,12 +113,6 @@ public class AdminUser {
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
-    // ADDED: Getter and Setter for systemUser
-    public SystemUser getSystemUser() {
-        return systemUser;
-    }
-
-    public void setSystemUser(SystemUser systemUser) {
-        this.systemUser = systemUser;
-    }
+    public SystemUser getSystemUser() { return systemUser; }
+    public void setSystemUser(SystemUser systemUser) { this.systemUser = systemUser; }
 }

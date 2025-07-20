@@ -4,5 +4,6 @@ public enum PaidStatus {
     PAID,
     UNPAID,
     PENDING,
-    EXPIRED
+    EXPIRED,
+    FREE
 }

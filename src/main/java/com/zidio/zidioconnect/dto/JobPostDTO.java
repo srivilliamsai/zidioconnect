@@ -1,9 +1,9 @@
 package com.zidio.zidioconnect.dto;
 
-import java.util.Date;
-
 import com.zidio.zidioconnect.enums.JobStatus;
 import com.zidio.zidioconnect.enums.JobType;
+
+import java.util.Date;
 
 public class JobPostDTO {
 
@@ -17,17 +17,17 @@ public class JobPostDTO {
     private Date postedDate;
     private Double minSalary;
     private Double maxSalary;
-    private Integer minExperience;
-    private Integer maxExperience;
+    private Double minExperience;
+    private Double maxExperience;
     private JobStatus jobStatus;
     private Date lastDateToApply;
 
-    public JobPostDTO() {}
+    public JobPostDTO() {
+    }
 
-    public JobPostDTO(Long id, String jobTitle, String jobDescription, String jobLocation,
-                      JobType jobType, String companyName, String postedByEmail, Date postedDate,
-                      Double minSalary, Double maxSalary, Integer minExperience, Integer maxExperience,
-                      JobStatus jobStatus, Date lastDateToApply) {
+    public JobPostDTO(Long id, String jobTitle, String jobDescription, String jobLocation, JobType jobType,
+                      String companyName, String postedByEmail, Date postedDate, Double minSalary, Double maxSalary,
+                      Double minExperience, Double maxExperience, JobStatus jobStatus, Date lastDateToApply) {
         this.id = id;
         this.jobTitle = jobTitle;
         this.jobDescription = jobDescription;
@@ -43,6 +43,8 @@ public class JobPostDTO {
         this.jobStatus = jobStatus;
         this.lastDateToApply = lastDateToApply;
     }
+
+    // Getters and Setters
 
     public Long getId() {
         return id;
@@ -124,19 +126,19 @@ public class JobPostDTO {
         this.maxSalary = maxSalary;
     }
 
-    public Integer getMinExperience() {
+    public Double getMinExperience() {
         return minExperience;
     }
 
-    public void setMinExperience(Integer minExperience) {
+    public void setMinExperience(Double minExperience) {
         this.minExperience = minExperience;
     }
 
-    public Integer getMaxExperience() {
+    public Double getMaxExperience() {
         return maxExperience;
     }
 
-    public void setMaxExperience(Integer maxExperience) {
+    public void setMaxExperience(Double maxExperience) {
         this.maxExperience = maxExperience;
     }
 
