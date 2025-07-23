@@ -51,7 +51,7 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- ✅ JJWT - Java JWT (v0.11.5) -->
+        <!--  JJWT - Java JWT (v0.11.5) -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
@@ -94,7 +94,7 @@
             <version>1.37.0</version>
         </dependency>
 
-        <!-- ✅ Eureka Client -->
+        <!--  Eureka Client -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
@@ -139,7 +139,7 @@
         </dependency>
     </dependencies>
 
-    <!-- ✅ Spring Cloud BOM -->
+    <!--  Spring Cloud BOM -->
     <dependencyManagement>
         <dependencies>
             <dependency>
