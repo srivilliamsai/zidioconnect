@@ -1,13 +1,18 @@
-# Ignore sensitive configs
-config-server/src/main/resources/application.yml
+# Ignore all service configs with secrets
+**/src/main/resources/application*.yml
+**/src/main/resources/application*.properties
 
-# Build
+# Local environment files
+*.env
+*.local.properties
+
+# Build outputs
 target/
 build/
 out/
 *.log
 
-# IDE
+# IDE settings
 .idea/
 .vscode/
 *.iml
@@ -15,6 +20,7 @@ out/
 .project
 .settings/
 
-# System
+# OS files
 .DS_Store
+Thumbs.db
 
