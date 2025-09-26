@@ -1,0 +1,141 @@
+version: "3.9"
+services:
+  config-server:
+    build: ./config-server
+    container_name: config-server
+    ports: ["8888:8888"]
+    restart: unless-stopped
+
+  eureka-server:
+    build: ./eureka-server
+    container_name: eureka-server
+    ports: ["8761:8761"]
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888
+    depends_on: [config-server]
+    restart: unless-stopped
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    ports: ["8080:8080"]
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on: [config-server, eureka-server]
+    restart: unless-stopped
+
+  auth-service:
+    build: ./auth-service
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on: [config-server, eureka-server]
+    restart: unless-stopped
+
+  system-user-service:
+    build: ./system-user-service
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on: [config-server, eureka-server]
+    restart: unless-stopped
+
+  student-service:
+    build: ./student-service
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on: [config-server, eureka-server]
+    restart: unless-stopped
+
+  jobpost-service:
+    build: ./jobpost-service
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on: [config-server, eureka-server]
+    restart: unless-stopped
+
+  recruiter-service:
+    build: ./recruiter-service
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on: [config-server, eureka-server]
+    restart: unless-stopped
+
+  application-service:
+    build: ./application-service
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on: [config-server, eureka-server]
+    restart: unless-stopped
+
+  subscription-service:
+    build: ./subscription-service
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on: [config-server, eureka-server]
+    restart: unless-stopped
+
+  payment-service:
+    build: ./payment-service
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on: [config-server, eureka-server]
+    restart: unless-stopped
+
+  paid-status-service:
+    build: ./paid-status-service
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on: [config-server, eureka-server]
+    restart: unless-stopped
+
+  admin-service:
+    build: ./admin-service
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on: [config-server, eureka-server]
+    restart: unless-stopped
+
+  notification-service:
+    build: ./notification-service
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on: [config-server, eureka-server]
+    restart: unless-stopped
+
+  fileupload-service:
+    build: ./fileupload-service
+    volumes:
+      - ./fileupload-service/uploads:/app/uploads
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on: [config-server, eureka-server]
+    restart: unless-stopped
+
+  analytics-service:
+    build: ./analytics-service
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on: [config-server, eureka-server]
+    restart: unless-stopped
+
+  email-service:
+    build: ./email-service
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on: [config-server, eureka-server]
+    restart: unless-stopped

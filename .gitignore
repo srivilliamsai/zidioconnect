@@ -1,0 +1,20 @@
+# Ignore sensitive configs
+config-server/src/main/resources/application.yml
+
+# Build
+target/
+build/
+out/
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.iml
+.classpath
+.project
+.settings/
+
+# System
+.DS_Store
+

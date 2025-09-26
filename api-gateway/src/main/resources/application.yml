@@ -1,0 +1,129 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  main:
+    web-application-type: reactive
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
+      # Global CORS config (open for local dev)
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            allowCredentials: false
+
+      # Ensure headers pass through proxies properly
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin, RETAIN_FIRST
+
+      routes:
+        # ---------- Auth ----------
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/api/auth/**
+
+        # ---------- Users / Students / Recruiters ----------
+        - id: system-user-service
+          uri: lb://SYSTEM-USER-SERVICE
+          predicates:
+            - Path=/api/system-users/**
+
+        - id: student-service
+          uri: lb://STUDENT-SERVICE
+          predicates:
+            - Path=/api/students/**
+
+        - id: recruiter-service
+          uri: lb://RECRUITER-SERVICE
+          predicates:
+            - Path=/api/recruiters/**
+
+        # ---------- Job posts & Applications ----------
+        - id: jobpost-service
+          uri: lb://JOBPOST-SERVICE
+          predicates:
+            - Path=/api/jobposts/**
+
+        - id: application-service
+          uri: lb://APPLICATION-SERVICE
+          predicates:
+            - Path=/api/applications/**
+
+        # ---------- Subscriptions / Payments / Paid-status ----------
+        - id: subscription-service
+          uri: lb://SUBSCRIPTION-SERVICE
+          predicates:
+            - Path=/api/subscriptions/**
+
+        - id: payment-service
+          uri: lb://PAYMENT-SERVICE
+          predicates:
+            - Path=/api/payments/**
+
+        - id: paid-status-service
+          uri: lb://PAID-STATUS-SERVICE
+          predicates:
+            - Path=/api/paid-status/**
+
+        # ---------- Notifications & Email ----------
+        - id: notification-service
+          uri: lb://NOTIFICATION-SERVICE
+          predicates:
+            - Path=/api/notifications/**
+
+        - id: email-service
+          uri: lb://EMAIL-SERVICE
+          predicates:
+            - Path=/api/email/**
+
+        # ---------- File Upload ----------
+        - id: fileupload-service
+          uri: lb://FILEUPLOAD-SERVICE
+          predicates:
+            - Path=/api/files/**
+
+        # ---------- Analytics ----------
+        - id: analytics-service
+          uri: lb://ANALYTICS-SERVICE
+          predicates:
+            - Path=/api/analytics/**
+
+        # ---------- Admin ----------
+        - id: admin-service
+          uri: lb://ADMIN-SERVICE
+          predicates:
+            - Path=/api/admin/**
+
+        # ---------- Employee ----------
+        - id: employee-service
+          uri: lb://EMPLOYEE-SERVICE
+          predicates:
+            - Path=/api/employees/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
