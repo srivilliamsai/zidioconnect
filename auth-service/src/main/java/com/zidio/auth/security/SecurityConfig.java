@@ -1,6 +1,5 @@
-package com.zidio.auth.config;
+package com.zidio.auth.security;
 
-import com.zidio.auth.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -41,18 +40,18 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
 
-        http.authorizeRequests(auth -> auth
+        http.authorizeHttpRequests(auth -> auth
                 .antMatchers(
-                        "/api/auth/**",  // register, login
-                        "/actuator/**",
-                        "/h2-console/**"
+                    "/api/auth/**",    // Registration, Login
+                    "/h2-console/**",  // H2 DB Console (dev only)
+                    "/actuator/**"     // Actuator endpoints
                 ).permitAll()
                 .anyRequest().authenticated()
         );
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
-        // Allow H2 console frames
+        // Only needed for H2 console in browser
         http.headers().frameOptions().disable();
 
         return http.build();

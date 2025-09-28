@@ -14,7 +14,9 @@ spring:
           enabled: true
           lower-case-service-id: true
 
-      # Global CORS config (open for local dev)
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin, RETAIN_FIRST
+
       globalcors:
         corsConfigurations:
           '[/**]':
@@ -23,18 +25,15 @@ spring:
             allowedHeaders: "*"
             allowCredentials: false
 
-      # Ensure headers pass through proxies properly
-      default-filters:
-        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin, RETAIN_FIRST
-
       routes:
-        # ---------- Auth ----------
+
+        # --- Auth Service ---
         - id: auth-service
           uri: lb://AUTH-SERVICE
           predicates:
             - Path=/api/auth/**
 
-        # ---------- Users / Students / Recruiters ----------
+        # --- Users ---
         - id: system-user-service
           uri: lb://SYSTEM-USER-SERVICE
           predicates:
@@ -50,9 +49,9 @@ spring:
           predicates:
             - Path=/api/recruiters/**
 
-        # ---------- Job posts & Applications ----------
+        # --- Jobs & Applications ---
         - id: jobpost-service
-          uri: lb://JOBPOST-SERVICE
+          uri: lb://JOBPOSTS-SERVICE
           predicates:
             - Path=/api/jobposts/**
 
@@ -61,7 +60,7 @@ spring:
           predicates:
             - Path=/api/applications/**
 
-        # ---------- Subscriptions / Payments / Paid-status ----------
+        # --- Subscriptions, Payments ---
         - id: subscription-service
           uri: lb://SUBSCRIPTION-SERVICE
           predicates:
@@ -77,7 +76,7 @@ spring:
           predicates:
             - Path=/api/paid-status/**
 
-        # ---------- Notifications & Email ----------
+        # --- Notifications & Email ---
         - id: notification-service
           uri: lb://NOTIFICATION-SERVICE
           predicates:
@@ -88,25 +87,25 @@ spring:
           predicates:
             - Path=/api/email/**
 
-        # ---------- File Upload ----------
+        # --- File Upload ---
         - id: fileupload-service
           uri: lb://FILEUPLOAD-SERVICE
           predicates:
             - Path=/api/files/**
 
-        # ---------- Analytics ----------
+        # --- Analytics ---
         - id: analytics-service
           uri: lb://ANALYTICS-SERVICE
           predicates:
             - Path=/api/analytics/**
 
-        # ---------- Admin ----------
+        # --- Admin ---
         - id: admin-service
           uri: lb://ADMIN-SERVICE
           predicates:
             - Path=/api/admin/**
 
-        # ---------- Employee ----------
+        # --- Employee ---
         - id: employee-service
           uri: lb://EMPLOYEE-SERVICE
           predicates:

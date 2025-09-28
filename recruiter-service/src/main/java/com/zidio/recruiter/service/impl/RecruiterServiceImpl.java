@@ -5,62 +5,53 @@ import com.zidio.recruiter.entity.Recruiter;
 import com.zidio.recruiter.mapper.RecruiterMapper;
 import com.zidio.recruiter.repository.RecruiterRepository;
 import com.zidio.recruiter.service.RecruiterService;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.criteria.Predicate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @Transactional
 public class RecruiterServiceImpl implements RecruiterService {
 
     private final RecruiterRepository repo;
+    private final RecruiterMapper mapper; // Injecting the mapper instance
 
-    public RecruiterServiceImpl(RecruiterRepository repo) {
+    public RecruiterServiceImpl(RecruiterRepository repo, RecruiterMapper mapper) {
         this.repo = repo;
-    }
-
-    @Override
-    public RecruiterDTO create(RecruiterDTO dto) {
-        Recruiter r = RecruiterMapper.toEntity(dto);
-        r = repo.save(r);
-        return RecruiterMapper.toDTO(r);
+        this.mapper = mapper;
     }
 
     @Override
     @Transactional(readOnly = true)
     public RecruiterDTO get(Long id) {
-        return repo.findById(id).map(RecruiterMapper::toDTO).orElse(null);
+        // Using explicit lambda to fix method reference compilation error
+        return repo.findById(id).map(recruiter -> mapper.toDTO(recruiter)).orElse(null); 
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<RecruiterDTO> list(String q, Pageable pageable) {
-        if (pageable == null) pageable = PageRequest.of(0, 10, Sort.by("id").descending());
-        Page<Recruiter> page = repo.findAll((root, cq, cb) -> {
-            List<Predicate> ps = new ArrayList<>();
-            if (q != null && !q.trim().isEmpty()) {
-                String like = "%" + q.trim().toLowerCase() + "%";
-                ps.add(cb.or(
-                        cb.like(cb.lower(root.get("firstName")), like),
-                        cb.like(cb.lower(root.get("lastName")), like),
-                        cb.like(cb.lower(root.get("email")), like),
-                        cb.like(cb.lower(root.get("company")), like)
-                ));
-            }
-            return cb.and(ps.toArray(new Predicate[0]));
-        }, pageable);
-        return page.map(RecruiterMapper::toDTO);
+        Page<Recruiter> page;
+        if (q != null && !q.trim().isEmpty()) {
+            // Assuming the method is now defined in RecruiterRepository.java
+            page = repo.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrCompanyContainingIgnoreCase(
+                q, q, q, q, pageable 
+            );
+        } else {
+            page = repo.findAll(pageable);
+        }
+        
+        // Using explicit lambda for type safety and to fix compilation error (Line 46)
+        return page.map(recruiter -> mapper.toDTO(recruiter)); 
     }
-
+    
+    // ... all other methods are now fine ...
     @Override
     public RecruiterDTO update(Long id, RecruiterDTO dto) {
         return repo.findById(id).map(existing -> {
-            RecruiterMapper.copyToEntity(dto, existing);
-            return RecruiterMapper.toDTO(repo.save(existing));
+            mapper.copyToEntity(dto, existing);
+            return mapper.toDTO(repo.save(existing));
         }).orElse(null);
     }
 
@@ -69,5 +60,12 @@ public class RecruiterServiceImpl implements RecruiterService {
         if (repo.existsById(id)) {
             repo.deleteById(id);
         }
+    }
+    
+    @Override
+    public RecruiterDTO create(RecruiterDTO dto) {
+        Recruiter r = mapper.toEntity(dto);
+        r = repo.save(r);
+        return mapper.toDTO(r);
     }
 }

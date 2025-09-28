@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.security.Key;
-import java.util.Date;
 import java.util.List;
 
 @Component
@@ -26,11 +25,9 @@ public class JwtUtil {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String generateToken(String subject, List<String> roles) {
-        // ... implementation ...
-        return null;
-    }
+    // generateToken method is removed. This service only validates.
 
+    @SuppressWarnings("unchecked")
     public List<String> extractRoles(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)

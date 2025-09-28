@@ -1,13 +1,13 @@
 package com.zidio.analytics.security;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.security.Key;
-import java.util.Date;
 import java.util.List;
 
 @Component
@@ -23,14 +23,11 @@ public class JwtUtil {
 
     @PostConstruct
     public void init() {
+        // Ensure the key is securely initialized
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String generateToken(String subject, List<String> roles) {
-        // ... implementation ...
-        return null;
-    }
-
+    @SuppressWarnings("unchecked")
     public List<String> extractRoles(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)

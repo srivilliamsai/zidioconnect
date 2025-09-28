@@ -11,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap; 
+import java.util.Map; 
 import java.util.stream.Collectors;
 
 @Service
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository repo;
+    private final Map<Long, StudentDTO> studentCache = new HashMap<>(); // 
 
     public StudentServiceImpl(StudentRepository repo) {
         this.repo = repo;
@@ -30,14 +33,22 @@ public class StudentServiceImpl implements StudentService {
         }
         Student s = StudentMapper.toEntity(dto);
         s = repo.save(s);
+        studentCache.clear();
         return StudentMapper.toDTO(s);
     }
 
     @Override
     @Transactional(readOnly = true)
     public StudentDTO get(Long id) {
+        if (studentCache.containsKey(id)) {
+            return studentCache.get(id);
+        }
+
         Student s = repo.findById(id).orElseThrow(() -> new RuntimeException("Student not found: " + id));
-        return StudentMapper.toDTO(s);
+        StudentDTO dto = StudentMapper.toDTO(s);
+
+        studentCache.put(id, dto);
+        return dto;
     }
 
     @Override
@@ -54,6 +65,9 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public StudentDTO update(Long id, StudentDTO dto) {
         Student s = repo.findById(id).orElseThrow(() -> new RuntimeException("Student not found: " + id));
+        
+        studentCache.remove(id); 
+
         if (dto.getEmail() != null && !dto.getEmail().equalsIgnoreCase(s.getEmail())) {
             if (repo.existsByEmail(dto.getEmail())) {
                 throw new IllegalArgumentException("Email already exists: " + dto.getEmail());
@@ -68,5 +82,6 @@ public class StudentServiceImpl implements StudentService {
     public void delete(Long id) {
         if (!repo.existsById(id)) throw new RuntimeException("Student not found: " + id);
         repo.deleteById(id);
+        studentCache.remove(id); 
     }
 }

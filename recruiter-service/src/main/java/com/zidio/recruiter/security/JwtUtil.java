@@ -15,31 +15,20 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String secret;
 
-    @Value("${jwt.expiration}") // This should match application.yml
+    @Value("${jwt.expiration}")
     private long jwtExpirationMs;
 
-    //  Generate token with roles
-    public String generateToken(String username, List<String> roles) {
-        return Jwts.builder()
-                .setSubject(username)
-                .claim("roles", roles)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
-                .signWith(SignatureAlgorithm.HS512, secret)
-                .compact();
-    }
+    // NOTE: generateToken method is in AuthService
 
-    //  Extract username
-    public String extractUsername(String token) {
-        return getClaims(token).getSubject();
-    }
-
-    //  Extract roles
+    @SuppressWarnings("unchecked")
     public List<String> extractRoles(String token) {
         return getClaims(token).get("roles", List.class);
     }
 
-    //  Validate token
+    public String extractUsername(String token) {
+        return getClaims(token).getSubject();
+    }
+
     public boolean validateToken(String token) {
         try {
             getClaims(token);
@@ -49,6 +38,7 @@ public class JwtUtil {
         }
     }
 
+    @SuppressWarnings("deprecation") // Jwts.parser() is deprecated in newer versions, but common in 2.x
     private Claims getClaims(String token) {
         return Jwts.parser()
                 .setSigningKey(secret)

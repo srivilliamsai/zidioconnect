@@ -1,4 +1,4 @@
-package com.zidio.employee.config;
+package com.zidio.employee.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

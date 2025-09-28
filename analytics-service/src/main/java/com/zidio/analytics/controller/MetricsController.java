@@ -12,7 +12,7 @@ public class MetricsController {
     public MetricsController(MetricsService service){ this.service = service; }
 
     @GetMapping("/metrics")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')") // This authorizes only ADMIN
     public ResponseEntity<Map<String, Long>> getMetrics(){
         return ResponseEntity.ok(service.snapshot());
     }

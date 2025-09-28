@@ -27,7 +27,6 @@ public class JwtUtil {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    // Corrected: Method now accepts and embeds roles in the token
     public String generateToken(String subject, List<String> roles) {
         Date now = new Date();
         Date exp = new Date(now.getTime() + expirationMs);
@@ -41,7 +40,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    // This method is now in both auth-service and recruiter-service
+    @SuppressWarnings("unchecked")
     public List<String> extractRoles(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)

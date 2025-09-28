@@ -5,8 +5,9 @@ import com.zidio.employee.entity.Employee;
 import com.zidio.employee.enums.EmployeeStatus;
 import com.zidio.employee.repository.EmployeeRepository;
 import com.zidio.employee.service.EmployeeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable; 
 
 import java.util.List;
 import java.util.Optional;
@@ -15,8 +16,11 @@ import java.util.stream.Collectors;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-    @Autowired
-    private EmployeeRepository repository;
+    private final EmployeeRepository repository; 
+
+    public EmployeeServiceImpl(EmployeeRepository repository) {
+        this.repository = repository;
+    }
 
     private EmployeeDTO mapToDTO(Employee employee) {
         EmployeeDTO dto = new EmployeeDTO();

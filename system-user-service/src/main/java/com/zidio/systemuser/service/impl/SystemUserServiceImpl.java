@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional 
 public class SystemUserServiceImpl implements SystemUserService {
 
     private final UserRepository repo;
-    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder; 
 
     public SystemUserServiceImpl(UserRepository repo, PasswordEncoder passwordEncoder) {
         this.repo = repo;
@@ -35,7 +35,7 @@ public class SystemUserServiceImpl implements SystemUserService {
             throw new IllegalArgumentException("Email already exists");
         }
         User u = new User();
-        UserMapper.fromCreate(u, dto, passwordEncoder.encode(dto.getPassword()));
+        UserMapper.fromCreate(u, dto, passwordEncoder.encode(dto.getPassword())); 
         return UserMapper.toDTO(repo.save(u));
     }
 
@@ -44,22 +44,27 @@ public class SystemUserServiceImpl implements SystemUserService {
         User u = repo.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found"));
         return UserMapper.toDTO(u);
     }
-
-    @Override
-    public List<UserDTO> list() {
-        return repo.findAll().stream().map(UserMapper::toDTO).collect(Collectors.toList());
-    }
-
+    
     @Override
     public UserDTO update(Long id, UpdateUserDTO dto) {
         User u = repo.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        if (dto.getEmail() != null && !dto.getEmail().equalsIgnoreCase(u.getEmail()) && repo.existsByEmail(dto.getEmail())) {
+             throw new IllegalArgumentException("Email already exists");
+        }
+
         UserMapper.applyUpdate(u, dto);
         return UserMapper.toDTO(repo.save(u));
     }
-
+    
     @Override
     public void delete(Long id) {
-        if (!repo.existsById(id)) return;
+        if (!repo.existsById(id)) throw new IllegalArgumentException("User not found");
         repo.deleteById(id);
+    }
+    
+    @Override
+    @Transactional(Transactional.TxType.SUPPORTS) 
+    public List<UserDTO> list() {
+        return repo.findAll().stream().map(UserMapper::toDTO).collect(Collectors.toList());
     }
 }

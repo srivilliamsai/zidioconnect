@@ -2,6 +2,8 @@ package com.zidio.recruiter.repository;
 
 import com.zidio.recruiter.entity.Recruiter;
 import com.zidio.recruiter.enums.RecruiterStatus;
+import org.springframework.data.domain.Page; 
+import org.springframework.data.domain.Pageable; 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -12,4 +14,6 @@ public interface RecruiterRepository extends JpaRepository<Recruiter, Long>, Jpa
     Optional<Recruiter> findByEmail(String email);
     boolean existsByEmail(String email);
     List<Recruiter> findByStatus(RecruiterStatus status);
+    Page<Recruiter> findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrCompanyContainingIgnoreCase(
+        String firstName, String lastName, String email, String company, Pageable pageable);
 }

@@ -4,9 +4,9 @@ import com.zidio.recruiter.dto.RecruiterDTO;
 import com.zidio.recruiter.service.RecruiterService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.ResponseEntity; // Add this import
-import org.springframework.security.access.prepost.PreAuthorize; // Add this import
-import org.springframework.validation.annotation.Validated; // Add this import
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize; // Keep this import
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -23,20 +23,20 @@ public class RecruiterController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_RECRUITER')") // Add this
+    @PreAuthorize("hasAuthority('ROLE_RECRUITER')") // Changed to hasAuthority
     public ResponseEntity<RecruiterDTO> create(@Valid @RequestBody RecruiterDTO dto) {
         RecruiterDTO saved = service.create(dto);
         return ResponseEntity.created(URI.create("/api/recruiters/" + saved.getId())).body(saved);
     }
-
+    // ... all other methods should use @PreAuthorize("hasAuthority('ROLE_RECRUITER')")
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_RECRUITER')") // Add this
+    @PreAuthorize("hasAuthority('ROLE_RECRUITER')") 
     public ResponseEntity<RecruiterDTO> get(@PathVariable Long id) {
         return ResponseEntity.ok(service.get(id));
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_RECRUITER')") // Add this
+    @PreAuthorize("hasAuthority('ROLE_RECRUITER')") 
     public ResponseEntity<Page<RecruiterDTO>> list(@RequestParam(defaultValue = "") String q,
                                                    @RequestParam(defaultValue = "0") int page,
                                                    @RequestParam(defaultValue = "10") int size) {
@@ -44,13 +44,13 @@ public class RecruiterController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_RECRUITER')") // Add this
+    @PreAuthorize("hasAuthority('ROLE_RECRUITER')") 
     public ResponseEntity<RecruiterDTO> update(@PathVariable Long id, @Valid @RequestBody RecruiterDTO dto) {
         return ResponseEntity.ok(service.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_RECRUITER')") // Add this
+    @PreAuthorize("hasAuthority('ROLE_RECRUITER')") 
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
