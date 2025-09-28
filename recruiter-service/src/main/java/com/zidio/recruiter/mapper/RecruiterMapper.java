@@ -2,7 +2,9 @@ package com.zidio.recruiter.mapper;
 
 import com.zidio.recruiter.dto.RecruiterDTO;
 import com.zidio.recruiter.entity.Recruiter;
+import org.springframework.stereotype.Component;
 
+@Component
 public class RecruiterMapper {
 
     public static Recruiter toEntity(RecruiterDTO dto) {
